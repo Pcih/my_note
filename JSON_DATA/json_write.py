@@ -1,21 +1,4 @@
-"""
-{
-01:{
-      'id': 1, 
-      'title': 'dada', 
-      'discription': 'adsasda',       
-      'data_r': '02.01.2020', 
-      'execution': 'False'}
 
-02:{
-      'id': 1, 
-      'title': 'dada', 
-      'discription': 'adsasda',       
-      'data_r': '02.01.2020', 
-      'execution': 'False'}
-
-}
-"""
 from colorama import Fore
 import json
 from datetime import datetime
@@ -70,3 +53,44 @@ def change_note():
 
     with open('db.json', 'w') as json_data_wried:
         json.dump(my_data, json_data_wried)
+
+def delete_note():
+    delete_user = input(Fore.RED + 'Какую запись выхотите удалить:')
+    with open('db.json', 'r') as json_data:
+        my_data = json.load(json_data)
+        dict_body['title'] = my_data[f'{delete_user}']['title']        
+        dict_body['discription'] = my_data[f'{delete_user}']['discription']
+        dict_body['data_note'] = my_data[f'{delete_user}']['data_note']
+        dict_body['data_c'] = my_data[f'{delete_user}']['data_c']
+        dict_body['data_r'] = datetime.now().strftime('%d.%m.%y|%H:%M:%S')
+        dict_body['execution'] = True
+    my_data[f'{delete_user}'] = dict_body
+
+    with open('db.json', 'w') as json_data_wried:
+        json.dump(my_data, json_data_wried)
+
+
+def history_all_note():
+    with open('db.json', 'r') as r_json:
+        data_json = json.load(r_json)
+    for k, v in data_json.items():
+       if v['execution']  == True:
+           print(Fore.CYAN + f'Заметка: {k}\n'
+                 f'Дата {v["data_note"]}\n'
+                 f'Зоголовок {v["title"]}\n'
+                 f'Описание {v["discription"]}')
+           print('*'*40)
+           print()
+
+def view_data():
+    user_data = input(Fore.GREEN + 'Ведите дату в формате "дд.мм.гг: "')
+    with open('db.json', 'r') as r_json:
+        data_json = json.load(r_json)
+    for k, v in data_json.items():
+       if v['data_note'].split('|')[0]  == user_data:
+           print(Fore.CYAN + f'Заметка: {k}\n'
+                 f'Дата {v["data_note"]}\n'
+                 f'Зоголовок {v["title"]}\n'
+                 f'Описание {v["discription"]}')
+           print('*'*40)
+           print()
